@@ -1,18 +1,23 @@
 import { Request, Response } from 'express'
+import User from '../models/user'
 
-export const getUsers = ( req: Request, res: Response ) => {
-  res.json({
-    msg: 'getUsers'
-  })
+export const getUsers = async( req: Request, res: Response ) => {
+  const users = await User.findAll()
+
+  res.json({ users })
 }
 
-export const getUser = ( req: Request, res: Response ) => {
+export const getUser = async( req: Request, res: Response ) => {
   const { id } = req.params
+  const user = await User.findByPk( id )
 
-  res.json({
-    msg: 'getUser',
-    id
-  })
+  if ( user ) {
+    res.json( user )
+  } else {
+    res.status(404).json({
+      msg: `There is no user with id ${ id }`
+    })
+  }
 }
 
 export const postUser = ( req: Request, res: Response ) => {
